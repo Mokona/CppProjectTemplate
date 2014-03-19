@@ -22,4 +22,4 @@ include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(test_suite "tests/main_class_tests.cpp")
 target_link_libraries(test_suite ${GTEST_LIBRARIES})
 add_definitions(-DGTEST_LINKED_AS_SHARED_LIBRARY=1)
-
+add_definitions(--std=c++11)
