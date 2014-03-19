@@ -8,12 +8,18 @@ aux_source_directory(src/ SRC_LIST)
 include_directories(.)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
-# enable_testing()
-# set(GTEST_ROOT "D:\\Dev\\Extern\\gtest-1.7.0-build")
-# set(GTEST_INCLUDE_DIR "D:\\Dev\\Extern\\gtest-1.7.0\\include")
-# find_package(gtest)
+# GTest initialization
 
-# include_directories(${GTEST_INCLUDE_DIRS})
-# add_executable(test_suite "tests/main_class_tests.cpp")
-# target_link_libraries(test_suite ${GTEST_BOTH_LIBRARIES})
+enable_testing()
+set(GTEST_ROOT "D:\\Dev\\Extern\\gtest-1.7.0-build")
+set(GTEST_INCLUDE_DIR "D:\\Dev\\Extern\\gtest-1.7.0\\include")
+find_package(gtest)
+
+# Test builds
+
+include_directories(${GTEST_INCLUDE_DIRS})
+
+add_executable(test_suite "tests/main_class_tests.cpp")
+target_link_libraries(test_suite ${GTEST_LIBRARIES})
+add_definitions(-DGTEST_LINKED_AS_SHARED_LIBRARY=1)
 
