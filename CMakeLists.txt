@@ -1,4 +1,4 @@
-project(CppMinimalTest)
+project(cpp_minimal_test)
 cmake_minimum_required(VERSION 2.8)
 
 aux_source_directory(. SRC_LIST)
@@ -11,12 +11,10 @@ add_executable(${PROJECT_NAME} ${SRC_LIST})
 # GTest initialization
 
 enable_testing()
-set(GTEST_ROOT "D:\\Dev\\Extern\\gtest-1.7.0-build")
-set(GTEST_INCLUDE_DIR "D:\\Dev\\Extern\\gtest-1.7.0\\include")
-find_package(gtest)
+set(GTEST_ROOT "./extern/gtest")
+find_package(GTest REQUIRED)
 
 # Test builds
-
 include_directories(${GTEST_INCLUDE_DIRS})
 
 add_executable(test_suite "tests/main_class_tests.cpp")

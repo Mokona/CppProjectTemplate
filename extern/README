@@ -1,0 +1,3 @@
+The extern directory is there for local installation of external libraries.
+
+GoogleTest: installed into gtest directory. Libraries at top and headers in include/ sub-directory.
