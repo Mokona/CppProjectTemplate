@@ -1,4 +1,4 @@
-project(cpp_minimal_test)
+project(cpp_project_template)
 cmake_minimum_required(VERSION 2.8)
 
 aux_source_directory(. SRC_LIST)
