@@ -1,25 +1,55 @@
-project(cpp_project_template)
-cmake_minimum_required(VERSION 2.8)
+project(cpp_project_template CXX)
+cmake_minimum_required(VERSION 3.0)
+enable_testing()
 
-aux_source_directory(. SRC_LIST)
-aux_source_directory(src/ SRC_LIST)
-# aux_source_directory(tests/ SRC_LIST)
-
-include_directories(.)
-add_executable(${PROJECT_NAME} ${SRC_LIST})
+add_subdirectory(src)
 
 # GTest initialization
 
-enable_testing()
-set(GTEST_ROOT "./extern/gtest")
-find_package(GTest REQUIRED)
+include(ExternalProject)
+set(gtest_settings
+    -Dgtest_disable_pthreads:bool=1
+    -DBUILD_SHARED_LIBS:bool=0
+    -DCMAKE_BUILD_TYPE:string=${CMAKE_BUILD_TYPE})
+    
+externalproject_add(google_test
+    EXCLUDE_FROM_ALL 1
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG release-1.7.0
+    TLS_VERIFY 1
+    UPDATE_DISCONNECTED 1
+    CMAKE_ARGS ${gtest_settings}
+    INSTALL_COMMAND ""
+    LOG_DOWNLOAD 1
+    LOG_UPDATE 1
+    LOG_BUILD 1
+)
 
-# Test builds
-include_directories(${GTEST_INCLUDE_DIRS})
+ExternalProject_Get_Property(google_test binary_dir)
+ExternalProject_Get_Property(google_test source_dir)
 
-add_executable(test_suite "tests/main_class_tests.cpp")
-target_link_libraries(test_suite ${GTEST_LIBRARIES})
-add_definitions(-DGTEST_LINKED_AS_SHARED_LIBRARY=1)
-add_definitions(--std=c++11)
+set(GOOGLE_TEST_BINARY ${binary_dir})
+set(GOOGLE_TEST_SOURCE ${source_dir})
 
-add_test(TestSuite test_suite)
+# Main program
+
+set(SOURCES main.cpp)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+target_link_libraries(${PROJECT_NAME} src)
+target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR})
+
+include(ExternalProject)
+
+# Test program
+
+set(SOURCES "tests/main_class_tests.cpp")
+set(TEST_SUITE_NAME ${PROJECT_NAME}_tests)
+
+add_executable(${TEST_SUITE_NAME} ${SOURCES})
+target_link_libraries(${TEST_SUITE_NAME} src ${GOOGLE_TEST_BINARY}/libgtest.a)
+target_include_directories(${TEST_SUITE_NAME} PRIVATE ${GOOGLE_TEST_SOURCE}/include)
+add_dependencies(${TEST_SUITE_NAME} google_test)
+
+add_test(TestSuite ${TEST_SUITE_NAME})
+
