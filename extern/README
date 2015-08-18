@@ -1,6 +1,0 @@
-The extern directory is there for local installation of external libraries.
-
-GoogleTest:
-	Installed into gtest directory.
-	Libraries at top and headers in include/ sub-directory.
-	Google Test must be compiled with -DGTEST_CREATE_SHARED_LIBRARY=1 option

@@ -14,5 +14,6 @@
 
 *.swp
 extern/
+build/
 CMakeLists.txt.user
 
